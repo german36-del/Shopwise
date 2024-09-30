@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "shopwise"
+version = "0.1.0"
+description = "Shop wise comparing your shopping list to the supermarkets"
+authors = ["german36-del <germanferrandodelrincon@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+tabulate = "0.9.0"
+fuzzywuzzy = "0.18.0"
+python-levenshtein = "0.26.0"
+pathlib = "1.0.1"
+
+[tool.poetry.scripts]
+shopwise = "shopwise.cfg:entrypoint"
+
+[tool.poetry.group.dev.dependencies]
+python = "^3.10"
+pytest = "^6.0"
+pre-commit = "3.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

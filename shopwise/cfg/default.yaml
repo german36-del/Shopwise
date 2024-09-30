@@ -1,0 +1,6 @@
+task: shoplist
+shoplist_path: shoplist.txt
+supermarkets: mercadona alcampo
+save_scrap: True
+output_folder: runs
+show: True
