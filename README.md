@@ -11,7 +11,7 @@
 
 ## ⚠️ Disclaimer
 
-This repository is under continuous development. Some supermarkets may not be fully implemented yet. The registry implemented address the task as scraping but actually it is not pure scraping.
+This repository is under continuous development. Some supermarkets may not be fully implemented yet. The registry implemented address the task as scraping but actually it is not pure scraping. The naming will be changed.
 
 ## 📋 Features
 
