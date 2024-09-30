@@ -1,4 +1,4 @@
-name: Resize-Dataset CI
+name: shopwise CI
 
 on:
   push:

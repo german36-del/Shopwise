@@ -77,26 +77,21 @@ shopwise(save_scrap=True, supermarkets=["mercadona", "alcampo"])
 
 <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
         <img src="shopwise/assets/alcampo.png" alt="Supermarket 1" style="max-width: 100%; height: auto; border-radius: 10px;">
-        <div style="font-size: 1.2em; margin-top: 10px;">Alcampo</div>
 </div>
 
 <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
         <img src="shopwise/assets/carrefour.jpg" alt="Supermarket 2" style="max-width: 100%; height: auto; border-radius: 10px;">
-        <div style="font-size: 1.2em; margin-top: 10px;">Carrefour</div>
 </div>
 
 <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
         <img src="shopwise/assets/dia.png" alt="Supermarket 3" style="max-width: 100%; height: auto; border-radius: 10px;">
-        <div style="font-size: 1.2em; margin-top: 10px;">Dia</div>
 </div>
 
 <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
         <img src="shopwise/assets/eroski.png" alt="Supermarket 4" style="max-width: 100%; height: auto; border-radius: 10px;">
-        <div style="font-size: 1.2em; margin-top: 10px;">Eroski</div>
 </div>
 
 <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
         <img src="shopwise/assets/mercadona.png" alt="Supermarket 5" style="max-width: 100%; height: auto; border-radius: 10px;">
-        <div style="font-size: 1.2em; margin-top: 10px;">Mercadona</div>
 </div>
 </div>

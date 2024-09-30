@@ -7,8 +7,11 @@ import requests
 from prettytable import PrettyTable
 
 from shopwise.utils import LOGGER, ConfigDict, colorstr
-from shopwise.utils.supermarket import (Product, compute_rough_price,
-                                        find_closest_product)
+from shopwise.utils.supermarket import (
+    Product,
+    compute_rough_price,
+    find_closest_product,
+)
 
 from .base import ShopScrapper
 
