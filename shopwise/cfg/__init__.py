@@ -175,8 +175,8 @@ def entrypoint(debug=""):
             LOGGER.warning(
                 colorstr(
                     "yellow",
-                    "WARNING ⚠️ '%s' does not require leading dashes '--', \
-                    updating to '%s'."s'.",
+                    "WARNING, ⚠️ '%s' does not require leading dashes '--', \
+                    updating to '%s'",
                     a,
                     a[2:],
                 )
