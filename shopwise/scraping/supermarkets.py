@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 import requests
 from prettytable import PrettyTable
 
-from shopwise.utils import LOGGER, ConfigDict, colorstr
+from shopwise.utils import LOGGER, ConfigDict, colorstr, ensure_folder_exist
 from shopwise.utils.supermarket import (
     Product,
     compute_rough_price,
@@ -152,7 +152,7 @@ class DiaScrapper(ShopScrapper):
         Args:
             filename (str): The name of the file to save the data to. Defaults to "dia_scrap.csv".
         """
-        # TODO: Check if this works and also do this in every class
+        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
             with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
@@ -381,6 +381,7 @@ class AlcampoScrapper(ShopScrapper):
         Args:
             filename (str): The name of the file to save the data to. Defaults to "alcampo_scrap.csv".
         """
+        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
             with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
@@ -691,9 +692,10 @@ class AldiScrapper(ShopScrapper):
         Args:
             filename (str, optional): The name of the CSV file to save the data. Defaults to "aldi_scrap.csv".
         """
-
+        ensure_folder_exist(self.cfg.output_folder)
+        full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
-            with open(filename, mode="w", newline="", encoding="utf-8") as file:
+            with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow(["Market", "Brand", "Name", "Price", "Image"])
                 for product in self.global_scraped_products:
@@ -852,8 +854,10 @@ class HipercorScrapper(ShopScrapper):
         Args:
             filename (str): The name of the file to save the data to. Defaults to 'hipercor_scrap.csv'.
         """
+        ensure_folder_exist(self.cfg.output_folder)
+        full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
-            with open(filename, mode="w", newline="", encoding="utf-8") as file:
+            with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow(["Market", "Brand", "Name", "Price", "Image"])
                 for product in self.global_scraped_products:
@@ -1091,6 +1095,7 @@ class MercadonaScrapper(ShopScrapper):
         Args:
             filename (str): The name of the CSV file to save the data. Defaults to "mercadona_scrap.csv".
         """
+        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
             with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
@@ -1365,6 +1370,7 @@ class EroskiScrapper(ShopScrapper):
         Args:
             filename (str): The name of the file to save the data to (default is "eroski_scrap.csv").
         """
+        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
             with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
@@ -1590,6 +1596,7 @@ class CarrefourScrapper(ShopScrapper):
         Args:
             filename (str, optional): The name of the CSV file to save the data. Defaults to "carrefour_scrap.csv".
         """
+        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
         if self.global_scraped_products:
             with open(full_filename, mode="w", newline="", encoding="utf-8") as file:

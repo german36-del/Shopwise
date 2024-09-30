@@ -1,4 +1,5 @@
 import re
+import os
 
 
 def find_matches(pattern_list, candidate_list):
@@ -53,3 +54,33 @@ def extract_first_number(input_string):
     if match:
         return float(match.group(0))
     return None
+
+
+def ensure_folder_exist(path):
+    """
+    Checks that a folder exists at the specified path, and if it does not exist, creates it.
+    This function takes a single string argument representing a filesystem path and ensures
+    that a folder exists at that path. It creates all necessary intermediate directories if
+    they do not exist. If the operation is successful, or if the folder already exists
+    , the function returns True.
+    Args:
+        path (str): The filesystem path where the folder should exist.
+    Returns:
+        bool: True if the folder already exists or was created successfully, False otherwise.
+    """
+    path = str(path)
+    separated = path.split(os.path.sep)
+    if separated[0] == "":
+        separated.pop(0)
+        separated[0] = os.path.sep + separated[0]
+    exists = True
+    for f in range(len(separated)):
+        path = (
+            os.path.sep.join(separated[: f + 1])
+            if f > 0
+            else (separated[0] + os.path.sep)
+        )
+        if not os.path.exists(path):
+            os.mkdir(path)
+            exists = False
+    return exists
