@@ -1,6 +1,8 @@
-task: shoplist
+task: supermarket
+shop_task: similar_product
+example_image: azucar.jpg
 shoplist_path: shoplist.txt
-supermarkets: mercadona alcampo
+supermarkets: alcampo
 save_scrap: True
 output_folder: runs
 show: True

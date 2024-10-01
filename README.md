@@ -25,8 +25,8 @@ To install **shopwise** you can clone the repository and use pip.
 1. Clone the repository.
 
    ```ssh
-   git clone https://german36-del/shopwise.git
-   cd shopwise
+   git clone https://german36-del/Shopwise.git
+   cd Shopwise
    ```
 
 2. Install the tool using pip.

@@ -1,16 +1,22 @@
 import csv
 import json
+import time
+import os
 from pathlib import Path
 from typing import List, Optional, Tuple
-
+import torch.nn.functional as F
+import torch
+from PIL import Image
+import faiss
+import numpy as np
 import requests
 from prettytable import PrettyTable
-
 from shopwise.utils import LOGGER, ConfigDict, colorstr, ensure_folder_exist
 from shopwise.utils.supermarket import (
     Product,
     compute_rough_price,
     find_closest_product,
+    get_image_from_url,
 )
 
 from .base import ShopScrapper
@@ -369,9 +375,9 @@ class AlcampoScrapper(ShopScrapper):
         Returns:
             str: The URL of the product image, or an empty string if not available.
         """
-        media = product_obj.get("imagePaths", [])
+        media = product_obj.get("image", {}).get("src", None)
         if media:
-            return f"{media[0]}/300x300.jpg"
+            return media
         return ""
 
     def save_data(self, filename: str = "alcampo_scrap.csv"):
@@ -498,6 +504,55 @@ class AlcampoScrapper(ShopScrapper):
                         self.global_scraped_products.append(chosen_product)
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
+
+    def get_most_similar_product(self, product_image, processor, model, device):
+        def add_vector_to_index(embedding, index):
+            vector = embedding.detach().cpu().numpy()
+            vector = np.float32(vector)
+            faiss.normalize_L2(vector)
+            index.add(vector)
+
+        if not os.path.exists(f"{self.cfg.output_folder}/alcampo_vector.index"):
+            response = requests.get(
+                "https://www.compraonline.alcampo.es/api/v5/products",
+                timeout=TIMEOUT_TIME,
+            )
+            if response.status_code == 200:
+                data = response.json()
+                products = data["entities"]["product"]
+                image_urls = []
+                for _, details in products.items():
+                    if "image" in details and "src" in details["image"]:
+                        image_urls.append(details["image"]["src"])
+            index = faiss.IndexFlatL2(384)
+            t0 = time.time()
+            loaded_images = []
+            for image_url in image_urls:
+                img = get_image_from_url(image_url)
+                loaded_images.append(img)
+                with torch.no_grad():
+                    inputs = processor(images=img, return_tensors="pt").to(device)
+                    outputs = model(**inputs)
+                features = outputs.last_hidden_state
+                add_vector_to_index(features.mean(dim=1), index)
+            LOGGER.info(f"Extraction done in : {time.time() - t0}")
+            faiss.write_index(index, f"{self.cfg.output_folder}/alcampo_vector.index")
+        example_image = Image.open(product_image)
+        with torch.no_grad():
+            inputs = processor(images=example_image, return_tensors="pt").to(device)
+            outputs = model(**inputs)
+        embeddings = outputs.last_hidden_state
+        embeddings = embeddings.mean(dim=1)
+        vector = embeddings.detach().cpu().numpy()
+        vector = np.float32(vector)
+        faiss.normalize_L2(vector)
+        index = faiss.read_index(f"{self.cfg.output_folder}/alcampo_vector.index")
+        d, i = index.search(vector, 1)
+        for l, s in enumerate(i[0]):
+            loaded_images[s].save(
+                f"{self.cfg.output_folder}/alcampo_similar_{os.path.splitext(os.path.basename(product_image))[0]}_d_{round(d[0][l], 2)}.png"
+            )
+        return d, [img for idx, img in enumerate(loaded_images) if idx in i[0]]
 
 
 # TODO: This scrapper is wrong programmed debug
@@ -751,6 +806,7 @@ class HipercorScrapper(ShopScrapper):
 
     def __init__(self, cfg):
         """Initializes the HipercorScrapper with the necessary market URI and image host."""
+        self.cfg = cfg
         self.market_uri = (
             "https://www.hipercor.es/alimentacion/api/catalog/supermercado/type_ahead/"
             "?question={}&scope=supermarket&center=010MOH&results=10"
@@ -1216,6 +1272,52 @@ class MercadonaScrapper(ShopScrapper):
                         self.global_scraped_products.append(chosen_product)
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
+
+    def get_most_similar_product(self, product_image, processor, model, device):
+        def add_vector_to_index(embedding, index):
+            vector = embedding.detach().cpu().numpy()
+            vector = np.float32(vector)
+            faiss.normalize_L2(vector)
+            index.add(vector)
+
+        body = {
+            "params": "query=&clickAnalytics=true&analyticsTags=%5B%22web%22%5D&getRankingInfo=true"
+        }
+        if not os.path.exists(f"{self.cfg.output_folder}/mercadona_vector.index"):
+            response = requests.post(self.market_uri, json=body)
+            if response.status_code == 200:
+                data = response.json()
+                products = data.get("hits", [])
+                images = [product.get("thumbnail", "") for product in products]
+            index = faiss.IndexFlatL2(384)
+            t0 = time.time()
+            loaded_images = []
+            for image_url in images:
+                img = get_image_from_url(image_url)
+                loaded_images.append(img)
+                with torch.no_grad():
+                    inputs = processor(images=img, return_tensors="pt").to(device)
+                    outputs = model(**inputs)
+                features = outputs.last_hidden_state
+                add_vector_to_index(features.mean(dim=1), index)
+            LOGGER.info(f"Extraction done in : {time.time() - t0}")
+            faiss.write_index(index, f"{self.cfg.output_folder}/mercadona_vector.index")
+        example_image = Image.open(product_image)
+        with torch.no_grad():
+            inputs = processor(images=example_image, return_tensors="pt").to(device)
+            outputs = model(**inputs)
+        embeddings = outputs.last_hidden_state
+        embeddings = embeddings.mean(dim=1)
+        vector = embeddings.detach().cpu().numpy()
+        vector = np.float32(vector)
+        faiss.normalize_L2(vector)
+        index = faiss.read_index(f"{self.cfg.output_folder}/mercadona_vector.index")
+        d, i = index.search(vector, 1)
+        for l, s in enumerate(i[0]):
+            loaded_images[s].save(
+                f"{self.cfg.output_folder}/alcampo_similar_{os.path.splitext(os.path.basename(product_image))[0]}_d_{round(d[0][l], 2)}.png"
+            )
+        return d, [img for idx, img in enumerate(loaded_images) if idx in i[0]]
 
 
 @SCRAPERS_SUPERMARKET_REGISTRY.register(name="eroski")

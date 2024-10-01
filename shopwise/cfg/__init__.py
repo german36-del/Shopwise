@@ -17,7 +17,9 @@ CLI_HELP_MSG = f"""
                 ARGS (optional) are any number of custom 'arg=value' pairs that override default configuration.
                     See all ARGS at shopwise/cfg folder
 
-    1.  (supermarket) Compute which supermarket is more suited for you with your supermarket
+    1.  (supermarket) Subtasks related to supermarket, indicate in shop_task in default.yaml or via argument
+        1.1 similar_product
+        1.2 optimal_shop
 
     GitHub: #TODO: Complete
     """

@@ -1,6 +1,8 @@
 from collections import namedtuple
 from typing import List, Optional
-
+from PIL import Image
+import requests
+from io import BytesIO
 from fuzzywuzzy import process
 
 from shopwise.utils.ops import find_matches, is_number
@@ -171,3 +173,11 @@ def process_shoping_list(filepath):
                     raise ValueError(f"Invalid quantity in line: {line.strip()}")
 
     return weight_products, unit_products, liquid_products
+
+
+def get_image_from_url(image_url):
+    response = requests.get(image_url)
+    if response.status_code == 200:
+        image_bytes = BytesIO(response.content)
+        pil_image = Image.open(image_bytes)
+        return pil_image

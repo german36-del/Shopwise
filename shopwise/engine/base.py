@@ -1,6 +1,8 @@
 from shopwise.scraping import SCRAPERS_REGISTRY
 from shopwise.utils import DEFAULT_CFG, LOGGER, ConfigDict, colorstr
 from shopwise.utils.supermarket import process_shoping_list
+import torch
+from transformers import AutoImageProcessor, AutoModel
 
 
 class ShopWise:
@@ -36,11 +38,12 @@ class ShopWise:
         self.cfg = ConfigDict({**DEFAULT_CFG, **kwargs})
         self.scrapers = {}
         self.products = {}
+        # If added more registries it should be placed somewhere else
         for supermarket in self.supermarkets:
             self.scrapers[supermarket] = SCRAPERS_REGISTRY.get(task).get(supermarket)(
                 self.cfg
             )
-        self.task_map[task]()
+        self.task_map[task][self.cfg.shop_task]()
 
     def compute_optimal_supermarket(self):
         """
@@ -92,6 +95,16 @@ class ShopWise:
                 )
             )
 
+    def search_similar_products(self):
+        similar_products = {}
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        processor = AutoImageProcessor.from_pretrained("facebook/dinov2-small")
+        model = AutoModel.from_pretrained("facebook/dinov2-small").to(device)
+        for supermarket, scraper in self.scrapers.items():
+            similar_products[supermarket] = scraper.get_most_similar_product(
+                self.cfg.example_image, processor, model, device
+            )
+
     @property
     def task_map(self):
         """
@@ -104,5 +117,8 @@ class ShopWise:
             dict: A dictionary mapping task names (str) to corresponding methods (callable).
         """
         return {
-            "supermarket": self.compute_optimal_supermarket,
+            "supermarket": {
+                "optimal_shop": self.compute_optimal_supermarket,
+                "similar_product": self.search_similar_products,
+            },
         }
