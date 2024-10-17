@@ -180,7 +180,6 @@ class DiaScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
         for products in self.global_scraped_products:
             for product in products:
@@ -191,7 +190,6 @@ class DiaScrapper(ShopScrapper):
                         product.name,
                         product.price,
                         product.price_unit_or_kg,
-                        product.image,
                     ]
                 )
         LOGGER.info(table)
@@ -409,7 +407,6 @@ class AlcampoScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
         for product in self.global_scraped_products:
             table.add_row(
@@ -419,7 +416,6 @@ class AlcampoScrapper(ShopScrapper):
                     product.name,
                     product.price,
                     product.price_unit_or_kg,
-                    product.image,
                 ]
             )
         LOGGER.info(table)
@@ -614,7 +610,6 @@ class AldiScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
         for product in self.global_scraped_products:
             table.add_row(
@@ -624,7 +619,6 @@ class AldiScrapper(ShopScrapper):
                     product.name,
                     product.price,
                     product.price_unit_or_kg,
-                    product.image,
                 ]
             )
         LOGGER.info(table)
@@ -880,7 +874,6 @@ class HipercorScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
         for product in self.global_scraped_products:
             table.add_row(
@@ -890,7 +883,6 @@ class HipercorScrapper(ShopScrapper):
                     product.name,
                     product.price,
                     product.price_unit_or_kg,
-                    product.image,
                 ]
             )
         LOGGER.info(table)
@@ -1123,7 +1115,6 @@ class MercadonaScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
         for product in self.global_scraped_products:
             table.add_row(
@@ -1133,7 +1124,6 @@ class MercadonaScrapper(ShopScrapper):
                     product.name,
                     product.price,
                     product.price_unit_or_kg,
-                    product.image,
                 ]
             )
         LOGGER.info(table)
@@ -1392,7 +1382,7 @@ class EroskiScrapper(ShopScrapper):
         Prints the scraped product data in a table format.
         """
         table = PrettyTable()
-        table.field_names = ["Market", "Brand", "Name", "Price", "Image"]
+        table.field_names = ["Market", "Brand", "Name", "Price"]
         for product in self.global_scraped_products:
             table.add_row(
                 [
@@ -1400,7 +1390,6 @@ class EroskiScrapper(ShopScrapper):
                     product.brand,
                     product.name,
                     product.price,
-                    product.image,
                 ]
             )
         LOGGER.info(table)
@@ -1624,7 +1613,6 @@ class CarrefourScrapper(ShopScrapper):
             "Name",
             "Price",
             "Price per Unit/Kg",
-            "Image",
         ]
 
         if self.global_scraped_products:
@@ -1636,7 +1624,6 @@ class CarrefourScrapper(ShopScrapper):
                         product.name,
                         product.price,
                         product.price_unit_or_kg,
-                        product.image,
                     ]
                 )
             LOGGER.info(table)
