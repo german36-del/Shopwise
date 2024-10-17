@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shopwise.cfg package &mdash; Shopwise 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="shopwise.engine package" href="shopwise.engine.html" />
+    <link rel="prev" title="shopwise package" href="shopwise.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Shopwise
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">shopwise</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="shopwise.html">shopwise package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="shopwise.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">shopwise.cfg package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shopwise.engine.html">shopwise.engine package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shopwise.scraping.html">shopwise.scraping package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shopwise.utils.html">shopwise.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shopwise.html#module-shopwise">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Shopwise</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">shopwise</a></li>
+          <li class="breadcrumb-item"><a href="shopwise.html">shopwise package</a></li>
+      <li class="breadcrumb-item active">shopwise.cfg package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/shopwise.cfg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="shopwise-cfg-package">
+<h1>shopwise.cfg package<a class="headerlink" href="#shopwise-cfg-package" title="Link to this heading"></a></h1>
+<section id="module-shopwise.cfg">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-shopwise.cfg" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="shopwise.cfg.check_dict_alignment">
+<span class="sig-name descname"><span class="pre">check_dict_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.cfg.check_dict_alignment" title="Link to this definition"></a></dt>
+<dd><p>Checks for any mismatched keys between a custom configuration dictionary
+and a base configuration dictionary. If any mismatched keys are found,
+the function prints out similar keys from the base dictionary and raises
+a SyntaxError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<em>dict</em>) – A dictionary of base configuration options.</p></li>
+<li><p><strong>custom</strong> (<em>dict</em>) – A dictionary of custom configuration options.</p></li>
+<li><p><strong>e</strong> (<em>Exception</em><em>, </em><em>optional</em>) – An optional exception to raise from (default is None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>SyntaxError</strong> – If mismatched keys are found between the custom and base dictionaries.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shopwise.cfg.entrypoint">
+<span class="sig-name descname"><span class="pre">entrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.cfg.entrypoint" title="Link to this definition"></a></dt>
+<dd><p>Parse CLI input and execute the entrypoint with specified arguments.</p>
+<p>This function processes a debug string or command-line arguments to update
+configuration settings and task values before initializing a ShopWise
+object. It supports special commands and handles configuration overrides
+based on user input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>debug</strong> (<em>str</em><em>, </em><em>optional</em>) – CLI debug string comprising ‘cfg’ key-value pairs.
+Defaults to “”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of ShopWise initialized with the provided arguments.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="shopwise.engine.base.html#shopwise.engine.base.ShopWise" title="shopwise.engine.base.ShopWise">ShopWise</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shopwise.cfg.merge_equals_args">
+<span class="sig-name descname"><span class="pre">merge_equals_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#shopwise.cfg.merge_equals_args" title="Link to this definition"></a></dt>
+<dd><p>Merges arguments around isolated ‘=’ args in a list of strings.</p>
+<p>This function processes a list of string arguments and merges them based on specific
+conditions related to the presence of isolated ‘=’ characters. It handles cases where
+the first argument ends with ‘=’, the second starts with ‘=’, and when ‘=’ is found
+in the middle of the arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of strings where each element is an argument.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of strings where the arguments around isolated ‘=’ are merged.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shopwise.cfg.parse_key_value_pair">
+<span class="sig-name descname"><span class="pre">parse_key_value_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.cfg.parse_key_value_pair" title="Link to this definition"></a></dt>
+<dd><p>Parse one ‘key=value’ pair and return the key and value.</p>
+<p>This function processes a string in the format ‘key=value’, ensuring that
+any spaces around the equals sign are removed. It splits the string into
+key and value components and checks that the value is not empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pair</strong> (<em>str</em>) – A string representing a key-value pair in the format ‘key=value’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the key (str) and the value (smart_value type).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="shopwise.cfg.smart_value">
+<span class="sig-name descname"><span class="pre">smart_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.cfg.smart_value" title="Link to this definition"></a></dt>
+<dd><p>Convert a string to an underlying type such as int, float, bool, etc.</p>
+<p>This function evaluates a string and attempts to convert it into its
+respective Python type. It can handle strings that represent <cite>None</cite>,
+<cite>True</cite>, and <cite>False</cite>, as well as numeric types. If the string cannot
+be converted, it will be returned as-is.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<em>str</em>) – The string to be evaluated and converted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted value or the original
+string if conversion is not possible.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | float | bool | None | str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="shopwise.html" class="btn btn-neutral float-left" title="shopwise package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="shopwise.engine.html" class="btn btn-neutral float-right" title="shopwise.engine package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Germán Ferrando.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

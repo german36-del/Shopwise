@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shopwise.scraping.base module &mdash; Shopwise 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="shopwise.scraping.supermarkets module" href="shopwise.scraping.supermarkets.html" />
+    <link rel="prev" title="shopwise.scraping package" href="shopwise.scraping.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Shopwise
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">shopwise</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="shopwise.html">shopwise package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="shopwise.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="shopwise.cfg.html">shopwise.cfg package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shopwise.engine.html">shopwise.engine package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="shopwise.scraping.html">shopwise.scraping package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shopwise.utils.html">shopwise.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shopwise.html#module-shopwise">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Shopwise</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">shopwise</a></li>
+          <li class="breadcrumb-item"><a href="shopwise.html">shopwise package</a></li>
+          <li class="breadcrumb-item"><a href="shopwise.scraping.html">shopwise.scraping package</a></li>
+      <li class="breadcrumb-item active">shopwise.scraping.base module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/shopwise.scraping.base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-shopwise.scraping.base">
+<span id="shopwise-scraping-base-module"></span><h1>shopwise.scraping.base module<a class="headerlink" href="#module-shopwise.scraping.base" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ShopScrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for scraping data from online shops.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.cfg">
+<span class="sig-name descname"><span class="pre">cfg</span></span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.cfg" title="Link to this definition"></a></dt>
+<dd><p>Configuration settings for the scraper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.compute_price_with_products">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_price_with_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_products</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_products</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_products</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.compute_price_with_products" title="Link to this definition"></a></dt>
+<dd><p>Compute the rough price with respect to the products passed as arguments comparing to the
+scraping of the supermarket</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weight_products</strong> (<em>dict</em>) – A dictionary representing the weight product.</p></li>
+<li><p><strong>unit_products</strong> (<em>dict</em>) – A dictionary representing the unit product.</p></li>
+<li><p><strong>liquid_products</strong> (<em>dict</em>) – A dictionary representing the liquid product.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The total price</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.extract_image">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.extract_image" title="Link to this definition"></a></dt>
+<dd><p>Extracts the image URL of a product from the product object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>product_obj</strong> (<em>dict</em>) – A dictionary representing the product.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The URL of the product’s image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.extract_price">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_price</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.extract_price" title="Link to this definition"></a></dt>
+<dd><p>Extracts the price of a product from the product object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>product_obj</strong> (<em>dict</em>) – A dictionary representing the product.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The price of the product.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.get_market">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_market</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.get_market" title="Link to this definition"></a></dt>
+<dd><p>Returns the name of the market from which data is being scraped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of the market.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.get_market_uri">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_market_uri</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.get_market_uri" title="Link to this definition"></a></dt>
+<dd><p>Returns the URI of the market’s webpage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The URI of the market’s webpage.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.get_product_list">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_product_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response_json_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.get_product_list" title="Link to this definition"></a></dt>
+<dd><p>Extracts a list of products from a response JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response_json_obj</strong> (<em>dict</em>) – A JSON object containing product data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of products extracted from the response.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.print_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">print_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.print_data" title="Link to this definition"></a></dt>
+<dd><p>Prints the scraped data to the console.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shopwise.scraping.base.ShopScrapper.save_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#shopwise.scraping.base.ShopScrapper.save_data" title="Link to this definition"></a></dt>
+<dd><p>Saves scraped data to a file in the specified format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to save the data.</p></li>
+<li><p><strong>file_format</strong> (<em>str</em>) – The format in which to save the data (e.g., ‘json’, ‘csv’).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="shopwise.scraping.html" class="btn btn-neutral float-left" title="shopwise.scraping package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="shopwise.scraping.supermarkets.html" class="btn btn-neutral float-right" title="shopwise.scraping.supermarkets module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Germán Ferrando.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
