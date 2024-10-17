@@ -2,6 +2,7 @@ from shopwise.scraping import SCRAPERS_REGISTRY
 from shopwise.utils import DEFAULT_CFG, LOGGER, ConfigDict, colorstr
 from shopwise.utils.supermarket import process_shoping_list
 import torch
+import os
 from transformers import AutoImageProcessor, AutoModel
 
 
@@ -100,9 +101,23 @@ class ShopWise:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         processor = AutoImageProcessor.from_pretrained("facebook/dinov2-small")
         model = AutoModel.from_pretrained("facebook/dinov2-small").to(device)
-        for supermarket, scraper in self.scrapers.items():
-            similar_products[supermarket] = scraper.get_most_similar_product(
-                self.cfg.example_image, processor, model, device
+        items_file_mapper = self.cfg.example_images_folder + "/items.txt"
+        if os.path.exists(items_file_mapper):
+            with open(items_file_mapper, "r") as file:
+                for line in file:
+                    words = line.strip().split()
+                    if len(words) > 0:
+                        image_path = words[0]
+                        items = " ".join(words[1:])
+                        for supermarket, scraper in self.scrapers.items():
+                            similar_products[supermarket] = (
+                                scraper.get_most_similar_product(
+                                    image_path, processor, model, device, items
+                                )
+                            )
+        else:
+            raise FileNotFoundError(
+                f"There must be a file with a name for the items you want to search in similarity search like {self.cfg.example_images_folder}/items.txt"
             )
 
     @property

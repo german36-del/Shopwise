@@ -1,8 +1,8 @@
 task: supermarket
-shop_task: similar_product
-example_image: azucar.jpg
+shop_task: optimal_shop
+example_images_folder: similar_search
 shoplist_path: shoplist.txt
 supermarkets: alcampo
 save_scrap: True
 output_folder: runs
-show: True
+show: False

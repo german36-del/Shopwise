@@ -4,6 +4,11 @@ import time
 import os
 from pathlib import Path
 from typing import List, Optional, Tuple
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image as ExcelImage
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
+from io import BytesIO
 import torch.nn.functional as F
 import torch
 from PIL import Image
@@ -380,29 +385,61 @@ class AlcampoScrapper(ShopScrapper):
             return media
         return ""
 
-    def save_data(self, filename: str = "alcampo_scrap.csv"):
+    def save_data(self, filename: str = "alcampo.xlsx"):
         """
-        Saves the scraped product data to a CSV file.
+        Saves the scraped product data to a xlsx file.
 
         Args:
-            filename (str): The name of the file to save the data to. Defaults to "alcampo_scrap.csv".
+            filename (str): The name of the XLSX file to save the data. Defaults to "mercadona.xlsx".
         """
-        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
-        if self.global_scraped_products:
-            with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
-                writer = csv.writer(file)
-                writer.writerow(["Market", "Brand", "Name", "Price", "Image"])
-                for product in self.global_scraped_products:
-                    writer.writerow(
-                        [
-                            product.market,
-                            product.brand,
-                            product.name,
-                            product.price,
-                            product.image,
-                        ]
-                    )
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Alcampo Products"
+        header_font = Font(bold=True, color="FFFFFF")
+        header_fill = PatternFill(
+            start_color="4F81BD", end_color="4F81BD", fill_type="solid"
+        )
+        alignment = Alignment(horizontal="center", vertical="center")
+        thin_border = Border(
+            left=Side(style="thin"),
+            right=Side(style="thin"),
+            top=Side(style="thin"),
+            bottom=Side(style="thin"),
+        )
+        headers = ["Market", "Brand", "Name", "Price (€)", "Image"]
+        ws.append(headers)
+
+        for col_num, _ in enumerate(headers, 1):
+            cell = ws[f"{get_column_letter(col_num)}1"]
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = alignment
+            cell.border = thin_border
+
+        ws.column_dimensions["A"].width = 15
+        ws.column_dimensions["B"].width = 20
+        ws.column_dimensions["C"].width = 35
+        ws.column_dimensions["D"].width = 10
+        ws.column_dimensions["E"].width = 25
+        for row_num, product in enumerate(self.global_scraped_products, start=2):
+            ws.append([product.market, product.brand, product.name, product.price])
+            if product.image:
+                pil_image = get_image_from_url(product.image)
+                if pil_image:
+                    image_bytes = BytesIO()
+                    pil_image.save(image_bytes, format="PNG")
+                    image_bytes.seek(0)
+                    img = ExcelImage(image_bytes)
+                    img.width, img.height = 180, 100
+                    img.anchor = f"E{row_num}"
+                    ws.add_image(img)
+                    ws.row_dimensions[row_num].height = 75
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=5):
+            for cell in row:
+                cell.alignment = alignment
+                cell.border = thin_border
+        wb.save(full_filename)
 
     def print_data(self):
         """
@@ -1144,29 +1181,61 @@ class MercadonaScrapper(ShopScrapper):
             return image_path
         return ""
 
-    def save_data(self, filename: str = "mercadona_scrap.csv"):
+    def save_data(self, filename: str = "mercadona.xlsx"):
         """
-        Saves the scraped product data to a CSV file.
+        Saves the scraped product data to a xlsx file.
 
         Args:
-            filename (str): The name of the CSV file to save the data. Defaults to "mercadona_scrap.csv".
+            filename (str): The name of the XLSX file to save the data. Defaults to "mercadona.xlsx".
         """
-        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
-        if self.global_scraped_products:
-            with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
-                writer = csv.writer(file)
-                writer.writerow(["Market", "Brand", "Name", "Price", "Image"])
-                for product in self.global_scraped_products:
-                    writer.writerow(
-                        [
-                            product.market,
-                            product.brand,
-                            product.name,
-                            product.price,
-                            product.image,
-                        ]
-                    )
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Mercadona Products"
+        header_font = Font(bold=True, color="FFFFFF")
+        header_fill = PatternFill(
+            start_color="4F81BD", end_color="4F81BD", fill_type="solid"
+        )
+        alignment = Alignment(horizontal="center", vertical="center")
+        thin_border = Border(
+            left=Side(style="thin"),
+            right=Side(style="thin"),
+            top=Side(style="thin"),
+            bottom=Side(style="thin"),
+        )
+        headers = ["Market", "Brand", "Name", "Price (€)", "Image"]
+        ws.append(headers)
+
+        for col_num, _ in enumerate(headers, 1):
+            cell = ws[f"{get_column_letter(col_num)}1"]
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = alignment
+            cell.border = thin_border
+
+        ws.column_dimensions["A"].width = 15
+        ws.column_dimensions["B"].width = 20
+        ws.column_dimensions["C"].width = 35
+        ws.column_dimensions["D"].width = 10
+        ws.column_dimensions["E"].width = 25
+        for row_num, product in enumerate(self.global_scraped_products, start=2):
+            ws.append([product.market, product.brand, product.name, product.price])
+            if product.image:
+                pil_image = get_image_from_url(product.image)
+                if pil_image:
+                    image_bytes = BytesIO()
+                    pil_image.save(image_bytes, format="PNG")
+                    image_bytes.seek(0)
+                    img = ExcelImage(image_bytes)
+                    img.width, img.height = 180, 100
+                    img.anchor = f"E{row_num}"
+                    ws.add_image(img)
+                    ws.row_dimensions[row_num].height = 75
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=5):
+            for cell in row:
+                cell.alignment = alignment
+                cell.border = thin_border
+        wb.save(full_filename)
 
     def print_data(self):
         """
@@ -1273,22 +1342,24 @@ class MercadonaScrapper(ShopScrapper):
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
 
-    def get_most_similar_product(self, product_image, processor, model, device):
+    def get_most_similar_product(self, product_image, processor, model, device, item):
         def add_vector_to_index(embedding, index):
             vector = embedding.detach().cpu().numpy()
             vector = np.float32(vector)
             faiss.normalize_L2(vector)
             index.add(vector)
 
-        body = {
-            "params": "query=&clickAnalytics=true&analyticsTags=%5B%22web%22%5D&getRankingInfo=true"
-        }
         if not os.path.exists(f"{self.cfg.output_folder}/mercadona_vector.index"):
-            response = requests.post(self.market_uri, json=body)
+            url = self.get_market_uri()
+            response = requests.post(
+                url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
+            )
             if response.status_code == 200:
                 data = response.json()
                 products = data.get("hits", [])
                 images = [product.get("thumbnail", "") for product in products]
+            else:
+                return None
             index = faiss.IndexFlatL2(384)
             t0 = time.time()
             loaded_images = []
