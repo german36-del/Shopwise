@@ -3,6 +3,7 @@ shop_task: optimal_shop
 example_images_folder: similar_search
 shoplist_path: shoplist.txt
 supermarkets: alcampo
+similar_search_folder: similar_search
 save_scrap: True
 output_folder: runs
 show: False

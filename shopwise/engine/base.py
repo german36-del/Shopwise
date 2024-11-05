@@ -1,9 +1,9 @@
-from shopwise.scraping import SCRAPERS_REGISTRY
-from shopwise.utils import DEFAULT_CFG, LOGGER, ConfigDict, colorstr
-from shopwise.utils.supermarket import process_shoping_list
 import torch
 import os
 from transformers import AutoImageProcessor, AutoModel
+from shopwise.scraping import SCRAPERS_REGISTRY
+from shopwise.utils import DEFAULT_CFG, LOGGER, ConfigDict, colorstr
+from shopwise.utils.supermarket import process_shoping_list
 
 
 class ShopWise:
@@ -112,7 +112,11 @@ class ShopWise:
                         for supermarket, scraper in self.scrapers.items():
                             similar_products[supermarket] = (
                                 scraper.get_most_similar_product(
-                                    image_path, processor, model, device, items
+                                    image_path,
+                                    processor,
+                                    model,
+                                    device,
+                                    items,
                                 )
                             )
         else:

@@ -542,7 +542,8 @@ class AlcampoScrapper(ShopScrapper):
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
 
-    def get_most_similar_product(self, product_image, processor, model, device):
+    # TODO: Keep track of the url_path of the images in case the index is already written, also it should make some hash to know if the index is the same
+    def get_most_similar_product(self, product_image, processor, model, device, items):
         def add_vector_to_index(embedding, index):
             vector = embedding.detach().cpu().numpy()
             vector = np.float32(vector)
@@ -551,7 +552,7 @@ class AlcampoScrapper(ShopScrapper):
 
         if not os.path.exists(f"{self.cfg.output_folder}/alcampo_vector.index"):
             response = requests.get(
-                "https://www.compraonline.alcampo.es/api/v5/products",
+                self.get_market_uri().format(items),
                 timeout=TIMEOUT_TIME,
             )
             if response.status_code == 200:
@@ -573,8 +574,12 @@ class AlcampoScrapper(ShopScrapper):
                 features = outputs.last_hidden_state
                 add_vector_to_index(features.mean(dim=1), index)
             LOGGER.info(f"Extraction done in : {time.time() - t0}")
+            ensure_folder_exist(self.cfg.output_folder)
             faiss.write_index(index, f"{self.cfg.output_folder}/alcampo_vector.index")
-        example_image = Image.open(product_image)
+        # TODO: Check if this path is absolute or make it relative
+        example_image = Image.open(
+            os.path.join(self.cfg.similar_search_folder, product_image)
+        )
         with torch.no_grad():
             inputs = processor(images=example_image, return_tensors="pt").to(device)
             outputs = model(**inputs)
@@ -1342,6 +1347,7 @@ class MercadonaScrapper(ShopScrapper):
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
 
+    # TODO: Keep track of the url_path of the images in case the index is already written, also it should make some hash to know if the index is the same
     def get_most_similar_product(self, product_image, processor, model, device, item):
         def add_vector_to_index(embedding, index):
             vector = embedding.detach().cpu().numpy()
