@@ -16,6 +16,7 @@ import faiss
 import numpy as np
 import requests
 from prettytable import PrettyTable
+from shopwise.utils.ops import get_hash, save_image_mapping, load_image_mapping
 from shopwise.utils import LOGGER, ConfigDict, colorstr, ensure_folder_exist
 from shopwise.utils.supermarket import (
     Product,
@@ -1349,13 +1350,16 @@ class MercadonaScrapper(ShopScrapper):
 
     # TODO: Keep track of the url_path of the images in case the index is already written, also it should make some hash to know if the index is the same
     def get_most_similar_product(self, product_image, processor, model, device, item):
+        hash_index = get_hash(item, product_image)
+        index_filename = f"{self.cfg.output_folder}/mercadona_{hash_index}.index"
+
         def add_vector_to_index(embedding, index):
             vector = embedding.detach().cpu().numpy()
             vector = np.float32(vector)
             faiss.normalize_L2(vector)
             index.add(vector)
 
-        if not os.path.exists(f"{self.cfg.output_folder}/mercadona_vector.index"):
+        if not os.path.exists(index_filename):
             url = self.get_market_uri()
             response = requests.post(
                 url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
@@ -1377,8 +1381,19 @@ class MercadonaScrapper(ShopScrapper):
                     outputs = model(**inputs)
                 features = outputs.last_hidden_state
                 add_vector_to_index(features.mean(dim=1), index)
+            save_image_mapping(
+                hash_index, images, self.cfg.output_folder, self.get_market()
+            )
             LOGGER.info(f"Extraction done in : {time.time() - t0}")
-            faiss.write_index(index, f"{self.cfg.output_folder}/mercadona_vector.index")
+            faiss.write_index(index, index_filename)
+        else:
+            loaded_images = []
+            url_images = load_image_mapping(
+                hash_index, self.cfg.output_folder, self.get_market()
+            )
+            LOGGER.info("Using cached data to get similar products...")
+            for url_img in url_images:
+                loaded_images.append(get_image_from_url(url_img))
         example_image = Image.open(product_image)
         with torch.no_grad():
             inputs = processor(images=example_image, return_tensors="pt").to(device)
@@ -1388,11 +1403,11 @@ class MercadonaScrapper(ShopScrapper):
         vector = embeddings.detach().cpu().numpy()
         vector = np.float32(vector)
         faiss.normalize_L2(vector)
-        index = faiss.read_index(f"{self.cfg.output_folder}/mercadona_vector.index")
+        index = faiss.read_index(index_filename)
         d, i = index.search(vector, 1)
         for l, s in enumerate(i[0]):
             loaded_images[s].save(
-                f"{self.cfg.output_folder}/alcampo_similar_{os.path.splitext(os.path.basename(product_image))[0]}_d_{round(d[0][l], 2)}.png"
+                f"{self.cfg.output_folder}/mercadona_similar_{os.path.splitext(os.path.basename(product_image))[0]}_d_{round(d[0][l], 2)}.png"
             )
         return d, [img for idx, img in enumerate(loaded_images) if idx in i[0]]
 

@@ -1,5 +1,30 @@
 import re
 import os
+import hashlib
+import json
+
+
+def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
+    mapping_file = f"{output_folder}/{supermarket}_mapping.json"
+    with open(mapping_file, "w") as f:
+        json.dump({hash_index: image_mapping}, f)
+
+
+def load_image_mapping(hash_index, output_folder, supermarket):
+    mapping_file = f"{output_folder}/{supermarket}_mapping.json"
+    if os.path.exists(mapping_file):
+        with open(mapping_file, "r") as f:
+            return json.load(f).get(hash_index, [])
+    return []
+
+
+def get_hash(item, product_image):
+    # Combine item and product image to create a unique string
+    unique_string = f"{item}_{product_image}"
+    # Create a hash of the unique string
+    return hashlib.md5(
+        unique_string.encode()
+    ).hexdigest()  # You can choose other hashing algorithms too
 
 
 def find_matches(pattern_list, candidate_list):

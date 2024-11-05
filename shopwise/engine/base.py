@@ -107,7 +107,9 @@ class ShopWise:
                 for line in file:
                     words = line.strip().split()
                     if len(words) > 0:
-                        image_path = words[0]
+                        image_path = os.path.join(
+                            self.cfg.similar_search_folder, words[0]
+                        )
                         items = " ".join(words[1:])
                         for supermarket, scraper in self.scrapers.items():
                             similar_products[supermarket] = (
