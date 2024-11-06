@@ -549,6 +549,33 @@ class AlcampoScrapper(ShopScrapper):
         return total_price, self.global_scraped_products
 
     def get_most_similar_product(self, product_image, processor, model, device, item):
+        """
+        Retrieves the most similar products to a given product image using a similarity search approach.
+
+        Args:
+            product_image (str): The path to the product image to compare against.
+            processor (transformers.PreTrainedProcessor): The processor used to preprocess the image for the model.
+            model (torch.nn.Module): The pre-trained model used to generate image embeddings.
+            device (torch.device): The device (CPU or GPU) to run the model on.
+            item (str): The item description or identifier used to fetch product data.
+
+        Returns:
+            tuple: A tuple containing:
+                - distances (np.ndarray): The distances of the most similar products found.
+                - similar_images (list of PIL.Image): A list of images of the most similar products.
+
+        The function first computes a unique hash for the product image and checks if a previously
+        generated index of similar product images exists. If not, it fetches product data from a
+        market API, processes the images to extract embeddings, and creates an index of product images
+        using FAISS. If the index already exists, it loads cached image URLs and retrieves their embeddings.
+
+        The product image's embedding is compared against the stored embeddings to identify the most
+        similar product, and the results (similar images and their similarity distances) are returned.
+        Additionally, the similar product images are saved to disk with their similarity scores in the filename.
+
+        If the request to the API fails or no similar products are found, the function handles the errors
+        gracefully and returns None.
+        """
         hash_index = get_hash(item, product_image)
         index_filename = f"{self.cfg.output_folder}/alcampo_{hash_index}.index"
 
@@ -890,6 +917,33 @@ class AldiScrapper(ShopScrapper):
         return float(product_json.get("salesPrice", 0.0))
 
     def get_most_similar_product(self, product_image, processor, model, device, item):
+        """
+        Retrieves the most similar products to a given product image using a similarity search approach.
+
+        Args:
+            product_image (str): The path to the product image to compare against.
+            processor (transformers.PreTrainedProcessor): The processor used to preprocess the image for the model.
+            model (torch.nn.Module): The pre-trained model used to generate image embeddings.
+            device (torch.device): The device (CPU or GPU) to run the model on.
+            item (str): The item description or identifier used to fetch product data.
+
+        Returns:
+            tuple: A tuple containing:
+                - distances (np.ndarray): The distances of the most similar products found.
+                - similar_images (list of PIL.Image): A list of images of the most similar products.
+
+        The function first computes a unique hash for the product image and checks if a previously
+        generated index of similar product images exists. If not, it fetches product data from a
+        market API, processes the images to extract embeddings, and creates an index of product images
+        using FAISS. If the index already exists, it loads cached image URLs and retrieves their embeddings.
+
+        The product image's embedding is compared against the stored embeddings to identify the most
+        similar product, and the results (similar images and their similarity distances) are returned.
+        Additionally, the similar product images are saved to disk with their similarity scores in the filename.
+
+        If the request to the API fails or no similar products are found, the function handles the errors
+        gracefully and returns None.
+        """
         hash_index = get_hash(item, product_image)
         index_filename = f"{self.cfg.output_folder}/aldi_{hash_index}.index"
 
@@ -1495,8 +1549,34 @@ class MercadonaScrapper(ShopScrapper):
                         total_price += compute_rough_price(quantity, chosen_product)
         return total_price, self.global_scraped_products
 
-    # TODO: Keep track of the url_path of the images in case the index is already written, also it should make some hash to know if the index is the same
     def get_most_similar_product(self, product_image, processor, model, device, item):
+        """
+        Retrieves the most similar products to a given product image using a similarity search approach.
+
+        Args:
+            product_image (str): The path to the product image to compare against.
+            processor (transformers.PreTrainedProcessor): The processor used to preprocess the image for the model.
+            model (torch.nn.Module): The pre-trained model used to generate image embeddings.
+            device (torch.device): The device (CPU or GPU) to run the model on.
+            item (str): The item description or identifier used to fetch product data.
+
+        Returns:
+            tuple: A tuple containing:
+                - distances (np.ndarray): The distances of the most similar products found.
+                - similar_images (list of PIL.Image): A list of images of the most similar products.
+
+        The function first computes a unique hash for the product image and checks if a previously
+        generated index of similar product images exists. If not, it fetches product data from a
+        market API, processes the images to extract embeddings, and creates an index of product images
+        using FAISS. If the index already exists, it loads cached image URLs and retrieves their embeddings.
+
+        The product image's embedding is compared against the stored embeddings to identify the most
+        similar product, and the results (similar images and their similarity distances) are returned.
+        Additionally, the similar product images are saved to disk with their similarity scores in the filename.
+
+        If the request to the API fails or no similar products are found, the function handles the errors
+        gracefully and returns None.
+        """
         hash_index = get_hash(item, product_image)
         index_filename = f"{self.cfg.output_folder}/mercadona_{hash_index}.index"
         print(f"Created {hash_index}")
@@ -1882,6 +1962,33 @@ class EroskiScrapper(ShopScrapper):
         return total_price, self.global_scraped_products
 
     def get_most_similar_product(self, product_image, processor, model, device, item):
+        """
+        Retrieves the most similar products to a given product image using a similarity search approach.
+
+        Args:
+            product_image (str): The path to the product image to compare against.
+            processor (transformers.PreTrainedProcessor): The processor used to preprocess the image for the model.
+            model (torch.nn.Module): The pre-trained model used to generate image embeddings.
+            device (torch.device): The device (CPU or GPU) to run the model on.
+            item (str): The item description or identifier used to fetch product data.
+
+        Returns:
+            tuple: A tuple containing:
+                - distances (np.ndarray): The distances of the most similar products found.
+                - similar_images (list of PIL.Image): A list of images of the most similar products.
+
+        The function first computes a unique hash for the product image and checks if a previously
+        generated index of similar product images exists. If not, it fetches product data from a
+        market API, processes the images to extract embeddings, and creates an index of product images
+        using FAISS. If the index already exists, it loads cached image URLs and retrieves their embeddings.
+
+        The product image's embedding is compared against the stored embeddings to identify the most
+        similar product, and the results (similar images and their similarity distances) are returned.
+        Additionally, the similar product images are saved to disk with their similarity scores in the filename.
+
+        If the request to the API fails or no similar products are found, the function handles the errors
+        gracefully and returns None.
+        """
         hash_index = get_hash(item, product_image)
         index_filename = f"{self.cfg.output_folder}/eroski_{hash_index}.index"
 

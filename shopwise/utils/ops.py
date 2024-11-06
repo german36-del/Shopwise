@@ -5,6 +5,19 @@ import json
 
 
 def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
+    """
+    Saves a mapping of image data to a JSON file.
+
+    Args:
+        hash_index (str): The unique index associated with the image mapping.
+        image_mapping (dict): The mapping of image-related data to be saved.
+        output_folder (str): The folder where the mapping file will be saved.
+        supermarket (str): The name of the supermarket used for naming the mapping file.
+
+    This function attempts to load an existing mapping file, adds the new mapping,
+    and saves the updated mapping back to the JSON file. If the file does not exist,
+    it creates a new one.
+    """
     mapping_file = f"{output_folder}/{supermarket}_mapping.json"
     try:
         with open(mapping_file, "r") as f:
@@ -17,6 +30,21 @@ def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
 
 
 def load_image_mapping(hash_index, output_folder, supermarket):
+    """
+    Loads an image mapping from a JSON file.
+
+    Args:
+        hash_index (str): The unique index associated with the image mapping to be loaded.
+        output_folder (str): The folder where the mapping file is located.
+        supermarket (str): The name of the supermarket used for locating the mapping file.
+
+    Returns:
+        list: The image mapping associated with the given hash_index. Returns an empty list
+              if the mapping file does not exist or the hash_index is not found.
+
+    This function attempts to load the mapping file and return the mapping for the specified
+    hash_index. If the file or the index does not exist, it returns an empty list.
+    """
     mapping_file = f"{output_folder}/{supermarket}_mapping.json"
     if os.path.exists(mapping_file):
         with open(mapping_file, "r") as f:
@@ -25,12 +53,22 @@ def load_image_mapping(hash_index, output_folder, supermarket):
 
 
 def get_hash(item, product_image):
-    # Combine item and product image to create a unique string
+    """
+    Generates a unique hash based on the item and product image.
+
+    Args:
+        item (str): The name or identifier of the item.
+        product_image (str): The name or identifier of the product image.
+
+    Returns:
+        str: A unique hash string generated from the item and product image.
+
+    This function combines the item and product image to create a unique string and
+    returns the MD5 hash of that string. The hash ensures a unique identifier for
+    combinations of item and image.
+    """
     unique_string = f"{item}_{product_image}"
-    # Create a hash of the unique string
-    return hashlib.md5(
-        unique_string.encode()
-    ).hexdigest()  # You can choose other hashing algorithms too
+    return hashlib.md5(unique_string.encode()).hexdigest()
 
 
 def find_matches(pattern_list, candidate_list):
