@@ -6,8 +6,14 @@ import json
 
 def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
     mapping_file = f"{output_folder}/{supermarket}_mapping.json"
+    try:
+        with open(mapping_file, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = {}
+    data[hash_index] = image_mapping
     with open(mapping_file, "w") as f:
-        json.dump({hash_index: image_mapping}, f)
+        json.dump(data, f, indent=4)  # Use indent for pretty printing (optional)
 
 
 def load_image_mapping(hash_index, output_folder, supermarket):
