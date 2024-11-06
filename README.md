@@ -72,55 +72,39 @@ shopwise(save_scrap=True, supermarkets=["mercadona", "alcampo"])
 ```
 
 ## 🛒 Supported Supermarkets
+Below is a list of supermarkets, with implemented ones and those still in development.
 
+#### Implemented Supermarkets
+These supermarkets are already integrated and ready to use.
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; padding: 20px;">
-  <!-- Implemented Supermarkets Section -->
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/alcampo.png" alt="Supermarket 1" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #34C759; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">Implemented</div>
-  </div>
-
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/mercadona.png" alt="Supermarket 5" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #34C759; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">Implemented</div>
-  </div>
-
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/eroski.png" alt="Supermarket 4" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #34C759; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">Implemented</div>
-  </div>
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/aldi.png" alt="Supermarket 4" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #34C759; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">Implemented</div>
-  </div>
-
-  
-
-  <!-- In Development Supermarkets Section -->
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/dia.png" alt="Supermarket 3" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #FF9500; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">In Development</div>
-  </div>
-
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center; background-color: #f9f9f9; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; overflow: hidden;">
-    <img src="shopwise/assets/carrefour.jpg" alt="Supermarket 2" style="max-width: 100%; height: auto; border-radius: 10px;">
-    <div style="position: absolute; top: 10px; left: 10px; background-color: #FF9500; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">In Development</div>
-  </div>
+<div align="center">
+  <img src="shopwise/assets/alcampo.png" alt="Alcampo" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #34C759;">Implemented</p>
 </div>
 
-<style>
-  /* Hover effect to make images more interactive */
-  div > div:hover {
-    transform: scale(1.05);
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Styling for in-development section */
-  .in-development {
-    background-color: #f9f9f9;
-    color: #FF9500;
-    font-size: 14px;
-  }
-</style>
+<div align="center">
+  <img src="shopwise/assets/mercadona.png" alt="Mercadona" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #34C759;">Implemented</p>
+</div>
 
+<div align="center">
+  <img src="shopwise/assets/eroski.png" alt="Eroski" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #34C759;">Implemented</p>
+</div>
+<div align="center">
+  <img src="shopwise/assets/aldi.png" alt="Eroski" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #34C759;">Implemented</p>
+</div>
+
+#### In Development Supermarkets
+These supermarkets are still under development.
+
+<div align="center">
+  <img src="shopwise/assets/dia.png" alt="Dia" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #FF9500;">In Development</p>
+</div>
+
+<div align="center">
+  <img src="shopwise/assets/carrefour.jpg" alt="Carrefour" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
+  <p style="font-weight: bold; color: #FF9500;">In Development</p>
+</div>
