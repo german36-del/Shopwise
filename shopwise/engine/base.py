@@ -111,7 +111,6 @@ class ShopWise:
                             self.cfg.similar_search_folder, words[0]
                         )
                         items = " ".join(words[1:])
-                        print(f"{image_path=}")
                         for supermarket, scraper in self.scrapers.items():
                             similar_products[supermarket] = (
                                 scraper.get_most_similar_product(

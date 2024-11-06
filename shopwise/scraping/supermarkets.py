@@ -99,6 +99,7 @@ class DiaScrapper(ShopScrapper):
             List[Product]: A list of Product objects extracted from the response.
         """
         product_list = []
+        print(f"{response_json_obj=}")
         products_json_list = response_json_obj.get("search_items", [])
         for product_json in products_json_list:
             product_obj = product_json
@@ -245,6 +246,8 @@ class DiaScrapper(ShopScrapper):
                     else:
                         self.global_scraped_products.append(chosen_product)
                         total_price += compute_rough_price(quantity, chosen_product)
+                elif response.status_code == 403:
+                    LOGGER.error(colorstr("red", "Not allowed to reach the DIA API"))
         if unit_products:
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
@@ -816,7 +819,7 @@ class AldiScrapper(ShopScrapper):
         full_filename = Path(self.cfg.output_folder) / filename
         wb = Workbook()
         ws = wb.active
-        ws.title = "Alcampo Products"
+        ws.title = "ALDI Products"
         header_font = Font(bold=True, color="FFFFFF")
         header_fill = PatternFill(
             start_color="4F81BD", end_color="4F81BD", fill_type="solid"
@@ -889,7 +892,6 @@ class AldiScrapper(ShopScrapper):
     def get_most_similar_product(self, product_image, processor, model, device, item):
         hash_index = get_hash(item, product_image)
         index_filename = f"{self.cfg.output_folder}/aldi_{hash_index}.index"
-        print(f"item {item}")
 
         def add_vector_to_index(embedding, index):
             vector = embedding.detach().cpu().numpy()
@@ -976,7 +978,6 @@ class AldiScrapper(ShopScrapper):
         return d, [img for idx, img in enumerate(loaded_images) if idx in i[0]]
 
 
-# NOT IMPLEMENTED, api not available
 @SCRAPERS_SUPERMARKET_REGISTRY.register(name="hipercor")
 class HipercorScrapper(ShopScrapper):
     """
@@ -994,6 +995,7 @@ class HipercorScrapper(ShopScrapper):
 
     def __init__(self, cfg):
         """Initializes the HipercorScrapper with the necessary market URI and image host."""
+        raise NotImplementedError("Hipercor supermarket still not implemented")
         self.cfg = cfg
         self.market_uri = (
             "https://www.hipercor.es/alimentacion/api/catalog/supermercado/type_ahead/"
@@ -1716,29 +1718,61 @@ class EroskiScrapper(ShopScrapper):
 
         return json.loads(f'{{"list": {response_str}}}')
 
-    def save_data(self, filename: str = "eroski_scrap.csv"):
+    def save_data(self, filename: str = "eroski.xlsx"):
         """
-        Saves the scraped product data to a CSV file.
+        Saves the scraped product data to a xlsx file.
 
         Args:
-            filename (str): The name of the file to save the data to (default is "eroski_scrap.csv").
+            filename (str): The name of the XLSX file to save the data. Defaults to "mercadona.xlsx".
         """
-        ensure_folder_exist(self.cfg.output_folder)
         full_filename = Path(self.cfg.output_folder) / filename
-        if self.global_scraped_products:
-            with open(full_filename, mode="w", newline="", encoding="utf-8") as file:
-                writer = csv.writer(file)
-                writer.writerow(["Market", "Brand", "Name", "Price", "Image"])
-                for product in self.global_scraped_products:
-                    writer.writerow(
-                        [
-                            product.market,
-                            product.brand,
-                            product.name,
-                            product.price,
-                            product.image,
-                        ]
-                    )
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "EROSKI Products"
+        header_font = Font(bold=True, color="FFFFFF")
+        header_fill = PatternFill(
+            start_color="4F81BD", end_color="4F81BD", fill_type="solid"
+        )
+        alignment = Alignment(horizontal="center", vertical="center")
+        thin_border = Border(
+            left=Side(style="thin"),
+            right=Side(style="thin"),
+            top=Side(style="thin"),
+            bottom=Side(style="thin"),
+        )
+        headers = ["Market", "Brand", "Name", "Price (€)", "Image"]
+        ws.append(headers)
+
+        for col_num, _ in enumerate(headers, 1):
+            cell = ws[f"{get_column_letter(col_num)}1"]
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = alignment
+            cell.border = thin_border
+
+        ws.column_dimensions["A"].width = 15
+        ws.column_dimensions["B"].width = 20
+        ws.column_dimensions["C"].width = 35
+        ws.column_dimensions["D"].width = 10
+        ws.column_dimensions["E"].width = 25
+        for row_num, product in enumerate(self.global_scraped_products, start=2):
+            ws.append([product.market, product.brand, product.name, product.price])
+            if product.image:
+                pil_image = get_image_from_url(product.image)
+                if pil_image:
+                    image_bytes = BytesIO()
+                    pil_image.save(image_bytes, format="PNG")
+                    image_bytes.seek(0)
+                    img = ExcelImage(image_bytes)
+                    img.width, img.height = 180, 100
+                    img.anchor = f"E{row_num}"
+                    ws.add_image(img)
+                    ws.row_dimensions[row_num].height = 75
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=5):
+            for cell in row:
+                cell.alignment = alignment
+                cell.border = thin_border
+        wb.save(full_filename)
 
     def print_data(self):
         """
@@ -1847,6 +1881,96 @@ class EroskiScrapper(ShopScrapper):
 
         return total_price, self.global_scraped_products
 
+    def get_most_similar_product(self, product_image, processor, model, device, item):
+        hash_index = get_hash(item, product_image)
+        index_filename = f"{self.cfg.output_folder}/eroski_{hash_index}.index"
+
+        def add_vector_to_index(embedding, index):
+            vector = embedding.detach().cpu().numpy()
+            vector = np.float32(vector)
+            faiss.normalize_L2(vector)
+            index.add(vector)
+
+        if not os.path.exists(index_filename):
+            market_uri = self.get_market_uri()
+            body_post = self.get_body_post(item)
+            headers = {
+                "Content-Type": "application/json",
+            }
+            response = requests.post(
+                market_uri,
+                data=body_post,
+                headers=headers,
+                timeout=TIMEOUT_TIME,
+            )
+            url = self.get_market_uri().format(item)
+            response = requests.get(url, timeout=TIMEOUT_TIME)
+            if response.status_code == 200:
+                response_json_obj = self.pre_process_response(response.text)
+                products = self.get_product_list(response_json_obj)
+                image_urls = [img_url.image for img_url in products]
+            else:
+                # Handle other status codes
+                LOGGER.error(f"Error: Received status code {response.status_code}")
+                if response.status_code == 404:
+                    LOGGER.error("Resource not found.")
+                elif response.status_code == 500:
+                    LOGGER.error("Server error. Try again later.")
+                return None, None
+            index = faiss.IndexFlatL2(384)
+            t0 = time.time()
+            loaded_images = []
+            if not image_urls:
+                LOGGER.warning(
+                    colorstr(
+                        "yellow",
+                        "WARNING ⚠️ No similar products with that description, try to change '%s' for a more generic query",
+                        item,
+                    )
+                )
+                return None, None
+            for image_url in image_urls:
+                img = get_image_from_url(image_url)
+                loaded_images.append(img)
+                with torch.no_grad():
+                    inputs = processor(images=img, return_tensors="pt").to(device)
+                    outputs = model(**inputs)
+                features = outputs.last_hidden_state
+                add_vector_to_index(features.mean(dim=1), index)
+            ensure_folder_exist(self.cfg.output_folder)
+            save_image_mapping(
+                hash_index, image_urls, self.cfg.output_folder, self.get_market()
+            )
+            LOGGER.info(f"Extraction done in : {time.time() - t0}")
+            faiss.write_index(index, index_filename)
+        else:
+            loaded_images = []
+            url_images = load_image_mapping(
+                hash_index, self.cfg.output_folder, self.get_market()
+            )
+            LOGGER.info("Using cached data to get similar products...")
+            if not url_images:
+                LOGGER.info("Not similar images found")
+                return None, None
+            for url_img in url_images:
+                loaded_images.append(get_image_from_url(url_img))
+        example_image = Image.open(product_image)
+        with torch.no_grad():
+            inputs = processor(images=example_image, return_tensors="pt").to(device)
+            outputs = model(**inputs)
+        embeddings = outputs.last_hidden_state
+        embeddings = embeddings.mean(dim=1)
+        vector = embeddings.detach().cpu().numpy()
+        vector = np.float32(vector)
+        faiss.normalize_L2(vector)
+        index = faiss.read_index(index_filename)
+        d, i = index.search(vector, 1)
+        for l, s in enumerate(i[0]):
+            loaded_images[s].save(
+                f"{self.cfg.output_folder}/eroski_similar_{os.path.splitext(os.path.basename(product_image))[0]}_d_{round(d[0][l], 2)}.png"
+            )
+        return d, [img for idx, img in enumerate(loaded_images) if idx in i[0]]
+
 
 @SCRAPERS_SUPERMARKET_REGISTRY.register(name="carrefour")
 class CarrefourScrapper(ShopScrapper):
@@ -1854,6 +1978,7 @@ class CarrefourScrapper(ShopScrapper):
         """
         Initializes the CarrefourScrapper instance with the market URI and an empty list for scraped products.
         """
+        raise NotImplementedError("Carrefour API is under mainteinance at the moment")
         self.cfg = cfg
         self.market_uri: str = (
             "https://www.carrefour.es/search-api/query/v1/search?query={}&scope=desktop&lang=es&rows=24&start=0&origin=default&f.op=OR"
