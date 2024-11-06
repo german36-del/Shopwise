@@ -101,10 +101,10 @@ These supermarkets are still under development.
 
 <div align="center">
   <img src="shopwise/assets/dia.png" alt="Dia" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
-  <p style="font-weight: bold; color: #FF9500;">In Development</p>
+  <p style="font-weight: bold; color: #FF9500;">Authentication errors</p>
 </div>
 
 <div align="center">
   <img src="shopwise/assets/carrefour.jpg" alt="Carrefour" width="200" style="border-radius: 10px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);">
-  <p style="font-weight: bold; color: #FF9500;">In Development</p>
+  <p style="font-weight: bold; color: #FF9500;">$${\color{red}API in maintainance}$$</p>
 </div>
