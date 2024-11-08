@@ -16,7 +16,12 @@ import faiss
 import numpy as np
 import requests
 from prettytable import PrettyTable
-from shopwise.utils.ops import get_hash, save_image_mapping, load_image_mapping
+from shopwise.utils.ops import (
+    get_hash,
+    save_image_mapping,
+    load_image_mapping,
+    check_requests_response,
+)
 from shopwise.utils import LOGGER, ConfigDict, colorstr, ensure_folder_exist
 from shopwise.utils.supermarket import (
     Product,
@@ -100,7 +105,6 @@ class DiaScrapper(ShopScrapper):
             List[Product]: A list of Product objects extracted from the response.
         """
         product_list = []
-        print(f"{response_json_obj=}")
         products_json_list = response_json_obj.get("search_items", [])
         for product_json in products_json_list:
             product_obj = product_json
@@ -233,7 +237,7 @@ class DiaScrapper(ShopScrapper):
             for item, quantity in weight_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -247,13 +251,11 @@ class DiaScrapper(ShopScrapper):
                     else:
                         self.global_scraped_products.append(chosen_product)
                         total_price += compute_rough_price(quantity, chosen_product)
-                elif response.status_code == 403:
-                    LOGGER.error(colorstr("red", "Not allowed to reach the DIA API"))
         if unit_products:
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -273,7 +275,7 @@ class DiaScrapper(ShopScrapper):
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -495,7 +497,7 @@ class AlcampoScrapper(ShopScrapper):
             for item, quantity in weight_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -513,7 +515,7 @@ class AlcampoScrapper(ShopScrapper):
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -533,7 +535,7 @@ class AlcampoScrapper(ShopScrapper):
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -591,7 +593,7 @@ class AlcampoScrapper(ShopScrapper):
                 self.get_market_uri().format(item),
                 timeout=TIMEOUT_TIME,
             )
-            if response.status_code == 200:
+            if check_requests_response(response.status_code, self.get_market()):
                 data = response.json()
                 products = data["entities"]["product"]
                 image_urls = []
@@ -818,7 +820,7 @@ class AldiScrapper(ShopScrapper):
                         headers=headers,
                         timeout=TIMEOUT_TIME,
                     )
-                    if response.status_code == 200:
+                    if check_requests_response(response.status_code, self.get_market()):
                         response_json_obj = response.json()
                         products = self.get_product_list(response_json_obj)
                         chosen_product = find_closest_product(products, item)
@@ -966,17 +968,11 @@ class AldiScrapper(ShopScrapper):
                 headers=headers,
                 timeout=TIMEOUT_TIME,
             )
-            if response.status_code == 200:
+            if check_requests_response(response.status_code, self.get_market()):
                 response_json_obj = response.json()
                 products = self.get_product_list(response_json_obj)
                 image_urls = [img_url.image for img_url in products]
             else:
-                # Handle other status codes
-                LOGGER.error(f"Error: Received status code {response.status_code}")
-                if response.status_code == 404:
-                    LOGGER.error("Resource not found.")
-                elif response.status_code == 500:
-                    LOGGER.error("Server error. Try again later.")
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
@@ -1215,7 +1211,7 @@ class HipercorScrapper(ShopScrapper):
             for item, quantity in weight_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1233,7 +1229,7 @@ class HipercorScrapper(ShopScrapper):
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1253,7 +1249,7 @@ class HipercorScrapper(ShopScrapper):
             for item, quantity in liquid_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1492,7 +1488,7 @@ class MercadonaScrapper(ShopScrapper):
                 response = requests.post(
                     url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
                 )
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1512,7 +1508,7 @@ class MercadonaScrapper(ShopScrapper):
                 response = requests.post(
                     url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
                 )
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1534,7 +1530,7 @@ class MercadonaScrapper(ShopScrapper):
                 response = requests.post(
                     url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
                 )
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = response.json()
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1593,31 +1589,11 @@ class MercadonaScrapper(ShopScrapper):
             response = requests.post(
                 url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
             )
-            if response.status_code == 200:
+            if check_requests_response(response.status_code, self.get_market()):
                 data = response.json()
                 products = data.get("hits", [])
                 images = [product.get("thumbnail", "") for product in products]
             else:
-                LOGGER.error(
-                    colorstr(
-                        "red",
-                        f"🚨 Error: Received status code {response.status_code} in {self.get_market()}",
-                    )
-                )
-                if response.status_code == 404:
-                    LOGGER.error(
-                        colorstr(
-                            "red",
-                            f"🚨 Error: resource not found in {self.get_market()}",
-                        )
-                    )
-                elif response.status_code == 500:
-                    LOGGER.error(
-                        colorstr(
-                            "red",
-                            f"🚨 Error: Server problems, try again later {self.get_market()}",
-                        )
-                    )
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
@@ -1925,7 +1901,7 @@ class EroskiScrapper(ShopScrapper):
             for item, quantity in weight_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = self.pre_process_response(response.text)
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1944,7 +1920,7 @@ class EroskiScrapper(ShopScrapper):
             for item, quantity in unit_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = self.pre_process_response(response.text)
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -1965,7 +1941,7 @@ class EroskiScrapper(ShopScrapper):
             for item, quantity in liquid_products.items():
                 url = self.get_market_uri().format(item)
                 response = requests.get(url, timeout=TIMEOUT_TIME)
-                if response.status_code == 200:
+                if check_requests_response(response.status_code, self.get_market()):
                     response_json_obj = self.pre_process_response(response.text)
                     products = self.get_product_list(response_json_obj)
                     chosen_product = find_closest_product(products, item)
@@ -2033,32 +2009,11 @@ class EroskiScrapper(ShopScrapper):
             )
             url = self.get_market_uri().format(item)
             response = requests.get(url, timeout=TIMEOUT_TIME)
-            if response.status_code == 200:
+            if check_requests_response(response.status_code, self.get_market()):
                 response_json_obj = self.pre_process_response(response.text)
                 products = self.get_product_list(response_json_obj)
                 image_urls = [img_url.image for img_url in products]
             else:
-                # Handle other status codes
-                LOGGER.error(
-                    colorstr(
-                        "red",
-                        f"🚨 Error: Received status code {response.status_code} in {self.get_market()}",
-                    )
-                )
-                if response.status_code == 404:
-                    LOGGER.error(
-                        colorstr(
-                            "red",
-                            f"🚨 Error: resource not found in {self.get_market()}",
-                        )
-                    )
-                elif response.status_code == 500:
-                    LOGGER.error(
-                        colorstr(
-                            "red",
-                            f"🚨 Error: Server problems, try again later {self.get_market()}",
-                        )
-                    )
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
@@ -2292,7 +2247,7 @@ class CarrefourScrapper(ShopScrapper):
                     response = requests.post(
                         url, json=self.get_body_post(item), timeout=TIMEOUT_TIME
                     )
-                    if response.status_code == 200:
+                    if check_requests_response(response.status_code, self.get_market()):
                         response_json_obj = response.json()
                         products = self.get_product_list(response_json_obj)
                         chosen_product = find_closest_product(products, item)

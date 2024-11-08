@@ -2,6 +2,35 @@ import re
 import os
 import hashlib
 import json
+from shopwise.utils import LOGGER, colorstr
+
+
+def check_requests_response(status_code, sender):
+    if status_code == 200:
+        return True
+    if status_code == 404:
+        LOGGER.error(
+            colorstr(
+                "red",
+                f"🚨 Error: resource not found in {sender}",
+            )
+        )
+        return False
+    elif status_code == 500:
+        LOGGER.error(
+            colorstr(
+                "red",
+                f"🚨 Error: Server problems, try again later {sender}",
+            )
+        )
+    else:
+        LOGGER.error(
+            colorstr(
+                "red",
+                f"🚨 Error: Received status code {status_code} in {sender}",
+            )
+        )
+        return False
 
 
 def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
@@ -20,12 +49,12 @@ def save_image_mapping(hash_index, image_mapping, output_folder, supermarket):
     """
     mapping_file = f"{output_folder}/{supermarket}_mapping.json"
     try:
-        with open(mapping_file, "r") as f:
+        with open(mapping_file, "r", encoding="utf-8") as f:
             data = json.load(f)
     except FileNotFoundError:
         data = {}
     data[hash_index] = image_mapping
-    with open(mapping_file, "w") as f:
+    with open(mapping_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)  # Use indent for pretty printing (optional)
 
 
@@ -47,7 +76,7 @@ def load_image_mapping(hash_index, output_folder, supermarket):
     """
     mapping_file = f"{output_folder}/{supermarket}_mapping.json"
     if os.path.exists(mapping_file):
-        with open(mapping_file, "r") as f:
+        with open(mapping_file, "r", encoding="utf-8") as f:
             return json.load(f).get(hash_index, [])
     return []
 
