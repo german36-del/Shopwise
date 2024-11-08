@@ -92,7 +92,7 @@ class ShopWise:
             )
             LOGGER.info(
                 colorstr(
-                    "cyan",
+                    "green",
                     f"The optimal supermarket for your shopping is {optimal_supermarket}",
                 )
             )
@@ -100,12 +100,36 @@ class ShopWise:
             LOGGER.warning(
                 colorstr(
                     "yellow",
-                    "No supermarkets found with valid prices for your shopping list.",
+                    "⚠️ No supermarkets found with valid prices for your shopping list.",
                 )
             )
 
     def search_similar_products(self):
+        """
+        Searches for similar products across different supermarkets by comparing
+        each product image in a specified file to images in a similarity search
+        folder using a pre-trained DINOv2 model.
+
+        This function reads a text file with image paths and item descriptions,
+        processes each image with a DINOv2 image processor, and leverages
+        individual scrapers for each supermarket to retrieve the most similar
+        product. The results are stored in a dictionary organized by supermarket.
+
+        Raises:
+            FileNotFoundError: If the items file does not exist at the specified path.
+
+        Returns:
+            dict: A dictionary where keys are supermarket names and values are
+                the most similar products found by each supermarket scraper.
+
+        Dependencies:
+            - Requires `self.cfg.example_images_folder` and `self.cfg.similar_search_folder`
+            to be valid directories containing the image paths and text file.
+            - `self.scrapers` should be a dictionary with supermarket names as keys
+            and scraper objects with a `get_most_similar_product` method.
+        """
         similar_products = {}
+        # TODO: Implement embedding model mapper to be more scalable
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         processor = AutoImageProcessor.from_pretrained("facebook/dinov2-small")
         model = AutoModel.from_pretrained("facebook/dinov2-small").to(device)

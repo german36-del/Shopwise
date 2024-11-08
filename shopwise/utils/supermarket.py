@@ -124,10 +124,10 @@ def process_shoping_list(filepath):
                     product_name = " ".join(filtered_list).strip()
                     try:
                         weight_value = float(splitted_line[matches_weight[0][0] - 1])
-                    except ValueError:
+                    except ValueError as exc:
                         raise ValueError(
                             f"Invalid weight value in line: {line.strip()}"
-                        )
+                        ) from exc
                     unit = matches_weight[0][1]
 
                     if unit == "kg":
@@ -152,10 +152,10 @@ def process_shoping_list(filepath):
                     product_name = " ".join(filtered_list).strip()
                     try:
                         volume_value = float(splitted_line[matches_volume[0][0] - 1])
-                    except ValueError:
+                    except ValueError as exc:
                         raise ValueError(
                             f"Invalid volume value in line: {line.strip()}"
-                        )
+                        ) from exc
                     unit = matches_volume[0][1]
 
                     if unit == "L":
@@ -176,6 +176,19 @@ def process_shoping_list(filepath):
 
 
 def get_image_from_url(image_url):
+    """
+    Fetches an image from a URL and returns it as a PIL image object.
+
+    Args:
+        image_url (str): The URL of the image to fetch.
+
+    Returns:
+        PIL.Image.Image: A PIL Image object created from the image fetched from the URL.
+
+    Raises:
+        requests.exceptions.RequestException: If there is an issue with the HTTP request.
+        PIL.UnidentifiedImageError: If the response content is not a valid image.
+    """
     response = requests.get(image_url)
     if response.status_code == 200:
         image_bytes = BytesIO(response.content)

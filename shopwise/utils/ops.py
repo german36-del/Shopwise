@@ -6,6 +6,19 @@ from shopwise.utils import LOGGER, colorstr
 
 
 def check_requests_response(status_code, sender):
+    """
+    Checks the status code of a HTTP response and logs an error message if the response indicates a failure.
+
+    Args:
+        status_code (int): The HTTP status code returned by the request.
+        sender (str): The source or context from which the request was made, used for logging purposes.
+
+    Returns:
+        bool: True if the status code indicates a successful request (200 OK), False otherwise.
+
+    Logs:
+        Error messages if the status code is 404 (Not Found), 500 (Server Error), or any other non-success status code.
+    """
     if status_code == 200:
         return True
     if status_code == 404:

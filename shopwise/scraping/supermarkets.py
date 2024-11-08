@@ -9,7 +9,6 @@ from openpyxl.drawing.image import Image as ExcelImage
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from io import BytesIO
-import torch.nn.functional as F
 import torch
 from PIL import Image
 import faiss
@@ -294,6 +293,12 @@ class DiaScrapper(ShopScrapper):
 
 @SCRAPERS_SUPERMARKET_REGISTRY.register(name="alcampo")
 class AlcampoScrapper(ShopScrapper):
+    """
+    This class is intended for getting products with requests to an API and compute different tasks:
+        - Compute price with a shoplist
+        - Get the most similar object from the market
+    """
+
     def __init__(self, cfg):
         self.cfg = cfg
         self.market_uri = "https://www.compraonline.alcampo.es/api/v5/products/search?limit=50&offset=0&sort=price&term={}"
@@ -542,8 +547,8 @@ class AlcampoScrapper(ShopScrapper):
                     if chosen_product is None:
                         LOGGER.info(
                             colorstr(
-                                "cyan",
-                                f"Not able to find a product similar to {item} in Alcampo supermarket",
+                                "yellow",
+                                f"⚠️ Not able to find a product similar to {item} in Alcampo supermarket",
                             )
                         )
                     else:
@@ -624,7 +629,6 @@ class AlcampoScrapper(ShopScrapper):
             save_image_mapping(
                 hash_index, image_urls, self.cfg.output_folder, self.get_market()
             )
-            LOGGER.info(f"Extraction done in : {time.time() - t0}")
             faiss.write_index(index, index_filename)
         else:
             loaded_images = []
@@ -975,7 +979,6 @@ class AldiScrapper(ShopScrapper):
             else:
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
-            t0 = time.time()
             loaded_images = []
             if not image_urls:
                 LOGGER.warning(
@@ -998,7 +1001,6 @@ class AldiScrapper(ShopScrapper):
             save_image_mapping(
                 hash_index, image_urls, self.cfg.output_folder, self.get_market()
             )
-            LOGGER.info(f"Extraction done in : {time.time() - t0}")
             faiss.write_index(index, index_filename)
         else:
             loaded_images = []
@@ -1125,7 +1127,9 @@ class HipercorScrapper(ShopScrapper):
             elif price_obj.get("pum_price"):
                 price_unit = price_obj.get("pum_price", "").replace("&euro; ", "€")
         except Exception as e:
-            LOGGER.error("Hipercor get product unitPrice error %e", e)
+            LOGGER.error(
+                colorstr("red", "🚨 Hipercor get product unitPrice error %e", e)
+            )
         return price_unit
 
     def extract_image(self, product_obj: dict) -> str:
@@ -1596,7 +1600,6 @@ class MercadonaScrapper(ShopScrapper):
             else:
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
-            t0 = time.time()
             loaded_images = []
             if not images:
                 LOGGER.warning(
@@ -1619,7 +1622,6 @@ class MercadonaScrapper(ShopScrapper):
             save_image_mapping(
                 hash_index, images, self.cfg.output_folder, self.get_market()
             )
-            LOGGER.info(f"Extraction done in : {time.time() - t0}")
             faiss.write_index(index, index_filename)
         else:
             loaded_images = []
@@ -1675,18 +1677,6 @@ class EroskiScrapper(ShopScrapper):
             str: The market URI for product search.
         """
         return self.market_uri
-
-    def get_body_post(self, term: str) -> dict:
-        """
-        Constructs the request body for product search.
-
-        Args:
-            term (str): The search term for the product.
-
-        Returns:
-            dict: An empty dictionary since Eroski uses GET.
-        """
-        return {}
 
     def get_product_list(self, response_json_obj: dict) -> List[Product]:
         """
@@ -1997,7 +1987,7 @@ class EroskiScrapper(ShopScrapper):
 
         if not os.path.exists(index_filename):
             market_uri = self.get_market_uri()
-            body_post = self.get_body_post(item)
+            body_post = {}
             headers = {
                 "Content-Type": "application/json",
             }
@@ -2016,7 +2006,6 @@ class EroskiScrapper(ShopScrapper):
             else:
                 return None, None
             index = faiss.IndexFlatL2(EMBEDDING_DIM)
-            t0 = time.time()
             loaded_images = []
             if not image_urls:
                 LOGGER.warning(
@@ -2039,7 +2028,6 @@ class EroskiScrapper(ShopScrapper):
             save_image_mapping(
                 hash_index, image_urls, self.cfg.output_folder, self.get_market()
             )
-            LOGGER.info(f"Extraction done in : {time.time() - t0}")
             faiss.write_index(index, index_filename)
         else:
             loaded_images = []
