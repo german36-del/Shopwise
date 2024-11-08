@@ -31,9 +31,10 @@ SCRAPERS_SUPERMARKET_REGISTRY = ConfigDict()
 
 TIMEOUT_TIME = 10
 
+EMBEDDING_DIM = 384
+
+
 # TODO: There are a lot of repeated code, maybe would be an improvement to make it more abstract
-
-
 @SCRAPERS_SUPERMARKET_REGISTRY.register(name="dia")
 class DiaScrapper(ShopScrapper):
     """
@@ -597,7 +598,7 @@ class AlcampoScrapper(ShopScrapper):
                 for _, details in products.items():
                     if "image" in details and "src" in details["image"]:
                         image_urls.append(details["image"]["src"])
-            index = faiss.IndexFlatL2(384)
+            index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
             loaded_images = []
             if not image_urls:
@@ -977,7 +978,7 @@ class AldiScrapper(ShopScrapper):
                 elif response.status_code == 500:
                     LOGGER.error("Server error. Try again later.")
                 return None, None
-            index = faiss.IndexFlatL2(384)
+            index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
             loaded_images = []
             if not image_urls:
@@ -1597,8 +1598,28 @@ class MercadonaScrapper(ShopScrapper):
                 products = data.get("hits", [])
                 images = [product.get("thumbnail", "") for product in products]
             else:
-                return None
-            index = faiss.IndexFlatL2(384)
+                LOGGER.error(
+                    colorstr(
+                        "red",
+                        f"🚨 Error: Received status code {response.status_code} in {self.get_market()}",
+                    )
+                )
+                if response.status_code == 404:
+                    LOGGER.error(
+                        colorstr(
+                            "red",
+                            f"🚨 Error: resource not found in {self.get_market()}",
+                        )
+                    )
+                elif response.status_code == 500:
+                    LOGGER.error(
+                        colorstr(
+                            "red",
+                            f"🚨 Error: Server problems, try again later {self.get_market()}",
+                        )
+                    )
+                return None, None
+            index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
             loaded_images = []
             if not images:
@@ -2018,13 +2039,28 @@ class EroskiScrapper(ShopScrapper):
                 image_urls = [img_url.image for img_url in products]
             else:
                 # Handle other status codes
-                LOGGER.error(f"Error: Received status code {response.status_code}")
+                LOGGER.error(
+                    colorstr(
+                        "red",
+                        f"🚨 Error: Received status code {response.status_code} in {self.get_market()}",
+                    )
+                )
                 if response.status_code == 404:
-                    LOGGER.error("Resource not found.")
+                    LOGGER.error(
+                        colorstr(
+                            "red",
+                            f"🚨 Error: resource not found in {self.get_market()}",
+                        )
+                    )
                 elif response.status_code == 500:
-                    LOGGER.error("Server error. Try again later.")
+                    LOGGER.error(
+                        colorstr(
+                            "red",
+                            f"🚨 Error: Server problems, try again later {self.get_market()}",
+                        )
+                    )
                 return None, None
-            index = faiss.IndexFlatL2(384)
+            index = faiss.IndexFlatL2(EMBEDDING_DIM)
             t0 = time.time()
             loaded_images = []
             if not image_urls:

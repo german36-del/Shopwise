@@ -41,9 +41,17 @@ class ShopWise:
         self.products = {}
         # If added more registries it should be placed somewhere else
         for supermarket in self.supermarkets:
-            self.scrapers[supermarket] = SCRAPERS_REGISTRY.get(task).get(supermarket)(
-                self.cfg
-            )
+            try:
+                self.scrapers[supermarket] = SCRAPERS_REGISTRY.get(task).get(
+                    supermarket
+                )(self.cfg)
+            except NotImplementedError as e:
+                LOGGER.error(
+                    colorstr(
+                        "red",
+                        f"🚨 Error initializing scraper for {supermarket}: {e}",
+                    )
+                )
         self.task_map[task][self.cfg.shop_task]()
 
     def compute_optimal_supermarket(self):
@@ -76,7 +84,7 @@ class ShopWise:
         filtered_supermarket_prices = {
             supermarket: price_and_products
             for supermarket, price_and_products in supermarket_prices.items()
-            if len(price_and_products[1]) > 0
+            if price_and_products[1] > 0
         }
         if filtered_supermarket_prices:
             optimal_supermarket = min(
@@ -103,10 +111,10 @@ class ShopWise:
         model = AutoModel.from_pretrained("facebook/dinov2-small").to(device)
         items_file_mapper = self.cfg.example_images_folder + "/items.txt"
         if os.path.exists(items_file_mapper):
-            with open(items_file_mapper, "r") as file:
+            with open(items_file_mapper, "r", encoding="utf-8") as file:
                 for line in file:
                     words = line.strip().split()
-                    if len(words) > 0:
+                    if words:
                         image_path = os.path.join(
                             self.cfg.similar_search_folder, words[0]
                         )
@@ -123,7 +131,8 @@ class ShopWise:
                             )
         else:
             raise FileNotFoundError(
-                f"There must be a file with a name for the items you want to search in similarity search like {self.cfg.example_images_folder}/items.txt"
+                f"There must be a file with a name for the items you want to \
+                  search in similarity search like {self.cfg.example_images_folder}/items.txt"
             )
 
     @property
