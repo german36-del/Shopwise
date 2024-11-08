@@ -70,6 +70,17 @@ from shopwise import shopwise
 # Find the best price for your shoplist!!
 shopwise(save_scrap=True, supermarkets=["mercadona", "alcampo"])
 ```
+## Supported supermarket tasks
+
+### Optimal shop
+The optimal shop allows to check in the list of supermarket you input and compute a total price for your shoplist, you can activate the show parameter or the save parameter to get more insights about the data used in the process, here is one example of the .xlsx generated when doing shopwise over Alcampo supermarket.
+
+ ![Excel generated](shopwise\assets\xlsx_example_alcampo.png)
+
+ ### Similar search
+
+ For the similar search engine to work properly it is required to create a folder with some information, a txt file containing one row per product with firstly the path to the image to look for similars and second the name of the item you want to search. 
+ > Note: This is done to make the search faster and dont look into the entire supermarket database. 
 
 ## 🛒 Supported Supermarkets
 Below is a list of supermarkets, with implemented ones and those still in development.
